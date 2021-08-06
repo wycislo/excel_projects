@@ -7,19 +7,24 @@ w2 = "The objective is to make the processing go faster, but will STILL TAKE A L
 If MsgBox(w1 + w2, vbYesNo) = vbYes Then
     'MsgBox "user clicked yes"
     'start the add_vol_for_ticker subroutine
-    Call add_vol_for_ticker
+    Dim ws_list As Variant
+    ws_list = Array("2016", "2015", "2014")
+        For Each ws_Name In ws_list
+            Call add_vol_for_ticker(ws_Name)
+        Next ws_Name
     Else
     'MsgBox "user clicked no"
         'do not run the program
         Exit Sub
     End If
+    ' Save the workbook
+    ThisWorkbook.Save
     
-
 
 
 End Sub
 
-Sub add_vol_for_ticker()
+Sub add_vol_for_ticker(ws_Name)
 
 Dim ticker As String
 Dim rowindex As Integer
@@ -29,11 +34,11 @@ ticker_volumn = 0
 rowindex = 2
 
 'start with 2016
-  Worksheets("2016").Activate
+  Worksheets(ws_Name).Activate
 
 
   Dim ws As Worksheet
-  Set ws = Worksheets("2016")
+  Set ws = Worksheets(ws_Name)
   'delete existing summary sheet from columns(i to l )
   Columns("I:L").Clear
   
@@ -88,7 +93,7 @@ ws.Range("I2:L21").Value = ""
         ticker_to_search = ws.Range("I" & j)
         
         If Trim(ticker_to_search) <> "" Then
-            With Sheets("2016").Range("A:A")
+            With Sheets(ws_Name).Range("A:A")
                 Set Rng = .Find(What:=ticker_to_search, _
                             After:=.Cells(.Cells.Count), _
                             LookIn:=xlValues, _
@@ -115,7 +120,7 @@ ws.Range("I2:L21").Value = ""
     Dim Rng2 As Range
     
     If Trim(ticker_to_search) <> "" Then
-        With Sheets("2016").Range("A:A")
+        With Sheets(ws_Name).Range("A:A")
             Set Rng2 = .Find(What:=ticker_to_search, _
                             After:=.Cells(1), _
                             LookIn:=xlValues, _
